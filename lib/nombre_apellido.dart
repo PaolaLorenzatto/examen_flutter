@@ -13,11 +13,12 @@ class _NombreApellidoWidgetState extends State<NombreApellidoWidget> {
   String _nombre = '';
   String _apellido = '';
   String _randomList = '';
+  bool _showLetter = false;
 
   void ingresarNombreyApellido() {
     String _abc = 'ABCDEFGHIJKLMÑOPQRSTUVWZ';
     _randomList = '';
-
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       _formKey.currentState!.reset();
@@ -43,6 +44,7 @@ class _NombreApellidoWidgetState extends State<NombreApellidoWidget> {
             i++;
           }
         }
+        _randomList.trim();
       }
 
       showDialog(
@@ -53,7 +55,8 @@ class _NombreApellidoWidgetState extends State<NombreApellidoWidget> {
                   'El nombre y apellido ingresado deben contener más de tres letras distintas, intente nuevamente.',
                   style: TextStyle(
                     fontSize: 20,
-                  ),textAlign: TextAlign.center,
+                  ),
+                  textAlign: TextAlign.center,
                 )
               : RichText(
                   textAlign: TextAlign.center,
@@ -73,11 +76,19 @@ class _NombreApellidoWidgetState extends State<NombreApellidoWidget> {
                   ]),
                 ),
           actions: [
-            TextButton(
+            ElevatedButton(
               onPressed: () {
+                setState(() {
+                  _showLetter = true;
+                });
+
                 Navigator.of(context).pop();
               },
-              child: const Text('Aceptar'),
+              child: Text(
+                'Aceptar',
+                /* style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary), */
+              ),
             ),
           ],
         ),
@@ -92,79 +103,89 @@ class _NombreApellidoWidgetState extends State<NombreApellidoWidget> {
         vertical: 50,
         horizontal: 20,
       ),
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(
-            30.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_randomList.isNotEmpty)
-                Center(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15.0,
-                        horizontal: 25,
-                      ),
-                      child: Text(
-                        _randomList,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.white),
-                      ),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(
+              20.0,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  validator: (value) =>
+                      value!.isEmpty ? 'Por favor ingrese su nombre' : null,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    label: Text(
+                      'Ingrese su nombre',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black),
                     ),
-                    color: Theme.of(context).colorScheme.primary,
                   ),
+                  onSaved: (value) {
+                    setState(() {
+                      _nombre = value.toString();
+                    });
+                  },
                 ),
-              TextFormField(
-                validator: (value) =>
-                    value!.isEmpty ? 'Por favor ingrese su nombre' : null,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  label: Text(
-                    'Ingrese su nombre',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
+                TextFormField(
+                  style: const TextStyle(color: Colors.black),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Por favor ingrese su apellido' : null,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    label: Text(
+                      'Ingrese su apellido',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
+                  onSaved: (value) {
+                    setState(() {
+                      _apellido = value.toString();
+                    });
+                  },
                 ),
-                onSaved: (value) {
-                  setState(() {
-                    _nombre = value.toString();
-                  });
-                },
-              ),
-              TextFormField(
-                style: const TextStyle(color: Colors.white),
-                validator: (value) =>
-                    value!.isEmpty ? 'Por favor ingrese su apellido' : null,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  label: Text(
-                    'Ingrese su apellido',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
+                const SizedBox(
+                  height: 20,
                 ),
-                onSaved: (value) {
-                  setState(() {
-                    _apellido = value.toString();
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton.icon(
-                onPressed: ingresarNombreyApellido,
-                icon: const Icon(Icons.done),
-                label: const Text('Aceptar'),
-              ),
-            ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: ingresarNombreyApellido,
+                      icon: const Icon(Icons.done),
+                      label: const Text('Aceptar'),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    if (_randomList.isNotEmpty && _showLetter)
+                      Center(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 15.0,
+                              horizontal: 25,
+                            ),
+                            child: Text(
+                              _randomList,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

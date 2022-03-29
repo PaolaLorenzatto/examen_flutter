@@ -16,16 +16,16 @@ class MyApp extends StatelessWidget {
       title: 'Examen Flutter',
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF313D5A),
-          secondary: const Color(0xFFBB4430),
-          surface: const Color(0xFFBB4430),
-          background: const Color(0xFFFFEAEE),
+          seedColor: const Color(0xFFFAAA8D),
+          secondary: const Color(0xFF19297C),
+          surface: const Color(0xFFD8DCFF),
+          background: const Color(0xFFAEADF0),
           onSurface: Colors.white,
           onSecondary: Colors.black,
         ),
       ),
       home: const MyHomePage(),
-    );
+    ); 
   }
 }
 
